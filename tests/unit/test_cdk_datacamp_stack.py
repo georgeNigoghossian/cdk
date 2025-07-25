@@ -1,6 +1,6 @@
 import aws_cdk as core
 import aws_cdk.assertions as assertions
-from cdk_datacamp.cdk_datacamp_stack import CdkDatacampStack
+from cdk.cdk_stack import CdkDatacampStack
 
 
 def test_sqs_queue_created():

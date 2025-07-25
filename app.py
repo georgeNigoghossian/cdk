@@ -1,11 +1,9 @@
-#!/usr/bin/env python3
+from aws_cdk import App
 
-import aws_cdk as cdk
+from cdk.cdk_stack import MyStack
 
-from cdk_datacamp.cdk_datacamp_stack import CdkDatacampStack
+app = App()
 
-
-app = cdk.App()
-CdkDatacampStack(app, "CdkDatacampStack")
+MyStack(app, "MyFirstStack")
 
 app.synth()
