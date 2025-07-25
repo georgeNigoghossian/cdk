@@ -1,0 +1,204 @@
+Resources:
+  ReusableComponentMyBucket90E77796:
+    Type: AWS::S3::Bucket
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Metadata:
+      aws:cdk:path: MyFirstStack/ReusableComponent/MyBucket/Resource
+  ReusableComponentMyFunctionServiceRole828E063D:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: MyFirstStack/ReusableComponent/MyFunction/ServiceRole/Resource
+  ReusableComponentMyFunctionServiceRoleDefaultPolicyCB6E7BB1:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:Abort*
+              - s3:DeleteObject*
+              - s3:GetBucket*
+              - s3:GetObject*
+              - s3:List*
+              - s3:PutObject
+              - s3:PutObjectLegalHold
+              - s3:PutObjectRetention
+              - s3:PutObjectTagging
+              - s3:PutObjectVersionTagging
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - ReusableComponentMyBucket90E77796
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - ReusableComponentMyBucket90E77796
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+      PolicyName: ReusableComponentMyFunctionServiceRoleDefaultPolicyCB6E7BB1
+      Roles:
+        - Ref: ReusableComponentMyFunctionServiceRole828E063D
+    Metadata:
+      aws:cdk:path: MyFirstStack/ReusableComponent/MyFunction/ServiceRole/DefaultPolicy/Resource
+  ReusableComponentMyFunctionD0D9D417:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 56d0488dfe23b82108d6e85aad3d5423e3d9cf01ae945f921090f9916e0c9775.zip
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - ReusableComponentMyFunctionServiceRole828E063D
+          - Arn
+      Runtime: python3.9
+    DependsOn:
+      - ReusableComponentMyFunctionServiceRoleDefaultPolicyCB6E7BB1
+      - ReusableComponentMyFunctionServiceRole828E063D
+    Metadata:
+      aws:cdk:path: MyFirstStack/ReusableComponent/MyFunction/Resource
+      aws:asset:path: asset.56d0488dfe23b82108d6e85aad3d5423e3d9cf01ae945f921090f9916e0c9775
+      aws:asset:is-bundled: false
+      aws:asset:property: Code
+  ReusableComponentMyFunctionLogGroup1F649FA6:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Join:
+          - ""
+          - - /aws/lambda/
+            - Ref: ReusableComponentMyFunctionD0D9D417
+      RetentionInDays: 731
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Metadata:
+      aws:cdk:path: MyFirstStack/ReusableComponent/MyFunction/LogGroup/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAA/32R32vDIBDH/5b6OIzrGthD3tLBxmCM0vWtlGL1lrgYLdEwgvi/T6MtG4U9nX7v7nO/VmS1fCTLBf02BeNdIcWJuA9LWYeDdHSmJG49sg7sHt2hA376VOmLk1lTA/uDx5L2J06Jex4Vs0KrvUNMc0BVyMKopYpLGPJvGJUVffL5GXnJ8ljQnritlhAA1JixB76eUOXQeRCKiTOVNWM6ADIrxcSEeiYkKEY9VbQBvtFSMAEGVYH3W5vqIceG5kMpznd6cymRImJO9tqwkPZVSaHg6ovr+N85jxZbw0mP6jVhp6PnhnMrcx7OYaEHZU1uaQYnpsemPIYlgDWkjgZL3Rji3nTzMujxHMaW+flO/+z8EuE93oLR48AgnXjGhJqNUI3Hm8m2Wt2X5GFFysWXEaLI9yPbZH8AgxOplEMCAAA=
+    Metadata:
+      aws:cdk:path: MyFirstStack/CDKMetadata/Default
+    Condition: CDKMetadataAvailable
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - af-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-3
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-4
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-south-2
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - il-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+      - Fn::Equals:
+          - Ref: AWS::Region
+          - us-west-2
+Parameters:
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+
