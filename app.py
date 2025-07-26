@@ -1,9 +1,8 @@
 from aws_cdk import App
-
-from cdk.cdk_stack import MyStack
+from cdk.WebAppStack import WebApplicationStack # Correct import path
 
 app = App()
 
-MyStack(app, "MyFirstStack")
+WebApplicationStack(app, "MyEnterpriseWebApp")
 
 app.synth()
